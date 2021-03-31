@@ -3,11 +3,17 @@ const table = require('./table');
 // import data
 const data = require('./data.json')
 
-// using generic table componeent
+// configuring table component
 const mealTable = table.genericTable(
+    // allowed keys
     ['mealType', 'calories', 'extra'], 
-    {'mealType': 'meal Type', 'calories': 'Calories'}
+    // header label
+    {'mealType': 'Meal Type', 'calories': 'Calories'},
+    // plugins
+    [table.columnSumPlugin('calories')]
 )
+
+// using meal table component
 const result = mealTable(data)
 
 // inject in entry-point

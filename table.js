@@ -20,14 +20,27 @@ const tableBody = (columns, bodyValues) => {
     return tbody(bodyContent)
 }
 
-const _genericTable = (columns, columnLabels, tableValues) => {
+const _genericTable = (columns, columnLabels, plugins, tableValues) => {
+    console.log(columns, columnLabels, plugins, tableValues)
+    const pluginsContent = plugins.map(plugin => plugin(tableValues))
+    const tableValuesAndPluginsContent = [...tableValues, ...pluginsContent]
     const tableContent = [
         tableHeader(columns, columnLabels),
-        tableBody(columns, tableValues),
+        tableBody(columns, tableValuesAndPluginsContent),
     ]
     return table(tableContent)
 }
 
+const _columnSumPlugin = (columnName, tableValues) => {
+    const sum = tableValues.reduce((sum, row) => {
+        const currentElementValue = row[columnName] || 0
+        return sum + currentElementValue
+    }, 0)
+    return {[columnName]: sum}
+}
+
 const genericTable = R.curry(_genericTable)
+const columnSumPlugin = R.curry(_columnSumPlugin)
 
 exports.genericTable = genericTable
+exports.columnSumPlugin = columnSumPlugin
