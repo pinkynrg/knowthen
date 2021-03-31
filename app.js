@@ -13,6 +13,8 @@ const mealTable = table.genericTable(
     [table.columnSumPlugin('calories')]
 )
 
+console.log(table.columnSumPlugin('calories')([{'calories': 100}, {'calories': 200}]))
+
 // using meal table component
 const result = mealTable(data)
 
