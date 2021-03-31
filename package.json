@@ -1,0 +1,19 @@
+{
+  "name": "todolist",
+  "version": "1.0.0",
+  "description": "Todo List in fp",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Francesco Meli",
+  "license": "ISC",
+  "dependencies": {
+    "hyperscript": "^2.0.2",
+    "hyperscript-helpers": "^3.0.3",
+    "parcel-bundler": "^1.6.1",
+    "ramda": "^0.27.1"
+  }
+}
