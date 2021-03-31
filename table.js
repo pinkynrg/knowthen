@@ -3,26 +3,27 @@ const R = require('ramda');
 const H = require('hyperscript')
 const { td, tr, th, tbody, thead, table } = require('hyperscript-helpers')(H);
 
-// create basic functions
-const tableRow = (columns, rowValues) => {
-    const rowContent = R.map(column => rowValues[column] ? td(rowValues[column]) : td(''), columns)
-    return tr(rowContent)
-}
+const orEmptyString = R.defaultTo('')
 
-const tableHeader = (columns, columnLabels) => {
-    const rowContent = R.map(column => columnLabels[column] ? th(columnLabels[column]) : th(''), columns)
-    const headerContent = tr(rowContent)
-    return thead(headerContent)
-}
+const tableRow = (columns, strList) => R.pipe(
+    R.map(column => orEmptyString(strList[column])),
+    R.map(e => td(e)),
+    tr,
+)(columns)
 
-const tableBody = (columns, bodyValues) => {
-    const bodyContent = R.map(rowValues => tableRow(columns, rowValues), bodyValues)
-    return tbody(bodyContent)
-}
+const tableHeader = (columns, headerLabels) => R.pipe(
+    R.map(column => orEmptyString(headerLabels[column])),
+    R.map(e => th(e)),
+    tr,
+)(columns)
+
+const tableBody = (columns, strListList) => R.pipe(
+    R.map(strList => tableRow(columns, strList)),
+    tbody,
+)(strListList)
 
 const _genericTable = (columns, columnLabels, plugins, tableValues) => {
     const pluginsContent = R.map(plugin => plugin(tableValues), plugins)
-    console.log(pluginsContent)
     const tableValuesAndPluginsContent = [...tableValues, ...pluginsContent]
     const tableContent = [
         tableHeader(columns, columnLabels),
@@ -31,20 +32,13 @@ const _genericTable = (columns, columnLabels, plugins, tableValues) => {
     return table(tableContent)
 }
 
-// ugly
-// const _columnSumPlugin = (columnName, tableValues) => {
-//     const sum = tableValues.reduce((sum, row) => {
-//         const currentElementValue = row[columnName] || 0
-//         return sum + currentElementValue
-//     }, 0)
-//     return {[columnName]: sum}
-// }
-
 const _columnSumPlugin = (columnName, tableValues) => {
-    const extractColumn = R.map(e => e[columnName])
-    const cleanColumn = R.filter(e => typeof(e) === 'number')
-    const sum = R.pipe(extractColumn, cleanColumn, R.sum)
-    return {[columnName]: sum(tableValues)}
+    const getSum = R.pipe(
+        R.map(e => e[columnName]),
+        R.filter(e => R.is(Number, e)),
+        R.sum,
+    )
+    return {[columnName]: getSum(tableValues)}
 }
 
 const genericTable = R.curry(_genericTable)
