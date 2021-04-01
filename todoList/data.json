@@ -2,5 +2,5 @@
     {"mealType": "breakfast", "calories": 100},
     {"mealType": "lunch", "calories": 200},
     {"mealType": "dinner", "calories": 150},
-    {"diocan": "dinner", "poroc": 150}
+    {"mealType": "this should fail", "calories": "testing"}
 ]
