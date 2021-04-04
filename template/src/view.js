@@ -1,4 +1,4 @@
-import h from 'hyperscript'
+import { h } from 'virtual-dom'
 import hh from 'hyperscript-helpers'
 
 const tags = hh(h);
